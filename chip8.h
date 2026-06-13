@@ -15,4 +15,5 @@ struct Chip8 {
 
 	void initialize();
 	bool loadRom(const std::string &filename);
+	void executeCycle();
 };
