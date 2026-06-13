@@ -1,0 +1,24 @@
+# Prerequisites
+*.d
+
+# Compiled Object Files and Executables
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+chip8Emulator
+
+# CMake Build Directories
+/cmake-build-debug/
+/cmake-build-release/
+/CMakeUserPresets.json
+
+# JetBrains CLion IDE Settings
+.idea/
+*.iws
+*.iml
+
+# macOS System Files
+.DS_Store
