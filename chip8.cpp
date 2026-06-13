@@ -83,6 +83,46 @@ void Chip8::executeCycle() {
 		case 0x7:
 			registers[registerX] += constantValueKK;
 			break;
+		case 0x8: {
+			uint16_t variant = currentOpcode & 0x000F;
+			switch (variant) {
+				case 0x0:
+					registers[registerX] = registers[registerY];
+					break;
+				case 0x1:
+					registers[registerX] |= registers[registerY];
+					break;
+				case 0x2:
+					registers[registerX] &= registers[registerY];
+					break;
+				case 0x3:
+					registers[registerX] ^= registers[registerY];
+					break;
+				case 0x4: {
+					uint16_t sum = registers[registerX] + registers[registerY];
+					registers[0xF] = (sum > 255) ? 1 : 0;
+					registers[registerX] = sum & 0xFF;
+					break;
+				}
+				case 0x5:
+					registers[0xF] = (registers[registerX] > registers[registerY]) ? 1 : 0;
+					registers[registerX] -= registers[registerY];
+					break;
+				case 0x6:
+					registers[0xF] = registers[registerX] & 0x1;
+					registers[registerX] >>= 1;
+					break;
+				case 0x7:
+					registers[0xF] = (registers[registerY] > registers[registerX]) ? 1 : 0;
+					registers[registerX] = registers[registerY] - registers[registerX];
+					break;
+				case 0xE:
+					registers[0xF] = (registers[registerX] & 0x80) >> 7;
+					registers[registerX] <<= 1;
+					break;
+			}
+			break;
+		}
 		case 0xA:
 			indexRegister = addressNNN;
 			break;
