@@ -12,6 +12,7 @@ struct Chip8 {
 	uint8_t soundTimer;
 	uint16_t stack[16];
 	uint8_t displayBuffer[64 * 32];
+	uint8_t keypad[16];
 
 	void initialize();
 	bool loadRom(const std::string &filename);

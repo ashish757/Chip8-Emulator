@@ -39,6 +39,7 @@ bool Chip8::loadRom(const std::string &filename) {
 
 
 void Chip8::executeCycle() {
+	// we grab the first two char (8 bits), and then left shit by 8 bit(2 places), and then attack bY OR the other two chars
 	uint16_t currentOpcode = (memory[programCounter] << 8) | memory[programCounter+1];
 	programCounter += 2;
 
@@ -126,7 +127,66 @@ void Chip8::executeCycle() {
 		case 0xA:
 			indexRegister = addressNNN;
 			break;
-		case 0xD:
+		case 0xE:
+			if (constantValueKK == 0x9E) {
+				if (keypad[registers[registerX]] != 0) {
+					programCounter += 2;
+				}
+			} else if (constantValueKK == 0xA1) {
+				if (keypad[registers[registerX]] == 0) {
+					programCounter += 2;
+				}
+			}
+			break;
+		case 0xF: {
+			switch (constantValueKK) {
+				case 0x07:
+					registers[registerX] = delayTimer;
+					break;
+				case 0x0A: {
+					bool keypress = false;
+					for (int i =0; i<16; i++) {
+						if (keypad[i] != 0) {
+							registers[registerX] = i;
+							keypress = true;
+							break;
+						}
+					}
+					if (!keypress) {
+						programCounter -= 2;
+					}
+					break;
+				}
+
+				case 0x15:
+					delayTimer = registers[registerX];
+					break;
+				case 0x18:
+					soundTimer = registers[registerX];
+					break;
+				case 0x1E:
+					indexRegister = registers[registerX];
+					break;
+				case 0x29:
+					indexRegister = registers[registerX] * 5;
+					break;
+				case 0x33:
+					memory[indexRegister] = registers[registerX] / 100;
+					memory[indexRegister + 1] += (registers[registerX] / 10) % 10;
+					memory[indexRegister + 2] += registers[registerX] % 10;
+				case 0x55:
+					for (int i = 0; i<=registerX; i++) {
+						memory[indexRegister + i] = registers[i];
+					}
+					break;
+				case 0x65:
+					for (int i = 0; i<=registerX; i++) {
+						registers[i] = memory[indexRegister + i];
+					}
+					break;
+			}
+			break;
+		}
 
 		default:
 			std::cout<<"Unknown opcode! "<< std::hex<<currentOpcode<<std::endl;
