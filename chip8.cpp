@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include  <cstdlib>
 
 // Chip 8 fontset
 const uint8_t fontset[80] = {
@@ -213,6 +214,17 @@ void Chip8::executeCycle() {
 			}
 			break;
 		}
+		case 0xB:
+			programCounter = addressNNN + registers[0];
+			break;
+
+		case 0xC: {
+			uint8_t randomByte = rand() % 256;
+			registers[registerX] = randomByte & constantValueKK;
+			break;
+
+		}
+
 
 		default:
 			std::cout<<"Unknown opcode! "<< std::hex<<currentOpcode<<std::endl;
