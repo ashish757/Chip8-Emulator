@@ -8,6 +8,12 @@ int main() {
 	Chip8 cpu;
 	cpu.initialize();
 
+	bool ROMloaded = cpu.loadRom("../Pong (alt).ch8");
+	if (!ROMloaded) {
+		std::cerr << "Failed to load ROM." << std::endl;
+		return -1;
+	}
+
 	int scaleFactor = 15;
 	InitWindow(64*scaleFactor, 32 * scaleFactor, "Chip-8 Emulator");
 	SetTargetFPS(60);
