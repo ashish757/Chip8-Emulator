@@ -37,7 +37,7 @@ void Chip8::initialize() {
 	}
 
 	indexRegister = 0;
-	programCounter = 0;
+	programCounter = 0x200;
 	delayTimer = 0;
 	soundTimer = 0;
 	stackPointer = 0;
@@ -71,17 +71,18 @@ void Chip8::executeCycle() {
 	programCounter += 2;
 
 	uint16_t firstNibble = (currentOpcode & 0xF000) >> 12;
-	uint16_t registerX = (currentOpcode & 0xF000) >> 8;
-	uint16_t registerY = (currentOpcode & 0xF000) >> 4;
+	uint16_t registerX = (currentOpcode & 0x0F00) >> 8;
+	uint16_t registerY = (currentOpcode & 0x00F0) >> 4;
 
-	uint16_t constantValueKK = currentOpcode & 0x0FFF;
+	uint16_t constantValueKK = currentOpcode & 0x00FF;
 	uint16_t addressNNN = currentOpcode & 0x0FFF;
+	uint16_t variant = currentOpcode & 0x000F;
 
 	switch (firstNibble) {
 		case 0x0:
-			if (constantValueKK == 0xE00) {
+			if (constantValueKK == 0xE0) {
 				std::fill(std::begin(displayBuffer), std::end(displayBuffer), 0);
-			} else if (constantValueKK == 0xE00) {
+			} else if (constantValueKK == 0xEE) {
 				stackPointer--;
 				programCounter = stack[stackPointer];
 			}
@@ -92,19 +93,23 @@ void Chip8::executeCycle() {
 		case 0x2:
 			stack[stackPointer] = programCounter;
 			stackPointer++;
-			programCounter +=2;
+			programCounter = addressNNN;
+			break;
 		case 0x3:
 			if (registers[registerX] == constantValueKK ) {
 				programCounter+=2;
 			}
+			break;
 		case 0x4:
 			if (registers[registerX] != constantValueKK ) {
 				programCounter+=2;
 			}
+			break;
 		case 0x5:
-			if (registers[registerX] != registers[registerY]) {
+			if (registers[registerX] == registers[registerY]) {
 				programCounter+=2;
 			}
+			break;
 		case 0x6:
 			registers[registerX] = constantValueKK;
 			break;
@@ -133,7 +138,7 @@ void Chip8::executeCycle() {
 					break;
 				}
 				case 0x5:
-					registers[0xF] = (registers[registerX] > registers[registerY]) ? 1 : 0;
+					registers[0xF] = (registers[registerX] >= registers[registerY]) ? 1 : 0;
 					registers[registerX] -= registers[registerY];
 					break;
 				case 0x6:
@@ -141,7 +146,7 @@ void Chip8::executeCycle() {
 					registers[registerX] >>= 1;
 					break;
 				case 0x7:
-					registers[0xF] = (registers[registerY] > registers[registerX]) ? 1 : 0;
+					registers[0xF] = (registers[registerY] >= registers[registerX]) ? 1 : 0;
 					registers[registerX] = registers[registerY] - registers[registerX];
 					break;
 				case 0xE:
@@ -192,15 +197,16 @@ void Chip8::executeCycle() {
 					soundTimer = registers[registerX];
 					break;
 				case 0x1E:
-					indexRegister = registers[registerX];
+					indexRegister += registers[registerX];
 					break;
 				case 0x29:
 					indexRegister = registers[registerX] * 5;
 					break;
 				case 0x33:
 					memory[indexRegister] = registers[registerX] / 100;
-					memory[indexRegister + 1] += (registers[registerX] / 10) % 10;
-					memory[indexRegister + 2] += registers[registerX] % 10;
+					memory[indexRegister + 1] = (registers[registerX] / 10) % 10;
+					memory[indexRegister + 2] = registers[registerX] % 10;
+					break;
 				case 0x55:
 					for (int i = 0; i<=registerX; i++) {
 						memory[indexRegister + i] = registers[i];

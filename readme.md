@@ -43,3 +43,4 @@
 - 0x8 -> ALU
 - 0xE -> Keyboard controls, used to check key presses
 - 0xF -> Hardware timers, Delay Timer, Sound Timer, bulk memory operations
+- 0xFX33 -> Binary Coded Decimal Conversion
