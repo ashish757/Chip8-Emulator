@@ -59,9 +59,21 @@ bool Chip8::loadRom(const std::string &filename) {
 	}
 
 	file.seekg(0, std::ios::beg);
-	file.read(reinterpret_cast<char*>(&memory[0]), fileSize);
-	file.close();
-	return true;
+
+	std::vector<char> buffer(fileSize);
+
+	if (file.read(buffer.data(), fileSize)) {
+		for (int i = 0; i < fileSize; i++) {
+			memory[0x200+i] = static_cast<uint8_t>(buffer[i]);
+		}
+
+		std::cout << "ROM Loaded "<<filename << std::endl;
+		return true;
+
+	}
+
+	std::cerr<<"Failed to load rom file "<<filename<<std::endl;
+	return false;
 }
 
 
