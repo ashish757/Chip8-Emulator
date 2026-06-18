@@ -1,3 +1,5 @@
+#include <iostream>
+#include <ostream>
 #include "raylib.h"
 #include "chip8.h"
 
