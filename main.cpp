@@ -8,10 +8,8 @@ int main() {
 	Chip8 cpu;
 	cpu.initialize();
 
-	int w = 800;
-	int h = 450;
-
-	InitWindow(w, h, "chip8");
+	int scaleFactor = 15;
+	InitWindow(64*scaleFactor, 32 * scaleFactor, "Chip-8 Emulator");
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose()) {
@@ -48,6 +46,16 @@ int main() {
 
 		BeginDrawing();
 		ClearBackground(BLACK);
+
+
+		for (int y =0; y < 32; y++) {
+			for (int x =0; x<64; x++) {
+				if (cpu.displayBuffer[(y*64) + x] == 1) {
+					DrawRectangle(x * scaleFactor, y * scaleFactor, scaleFactor , scaleFactor, WHITE);
+				}
+			}
+		}
+
 		EndDrawing();
 	}
 
