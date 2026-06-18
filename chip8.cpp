@@ -230,7 +230,34 @@ void Chip8::executeCycle() {
 			break;
 
 		}
+		case 0xD: {
+			uint16_t xPos = registers[registerX] % 64;
+			uint16_t yPos = registers[registerY] % 32;
 
+			uint16_t spriteHeight = variant;
+			registers[0xF] = 0;
+			for (unsigned int row = 0; row < spriteHeight; row++) {
+				uint8_t spriteByte = memory[indexRegister + row];
+
+				for (unsigned int col = 0; col<8; col++) {
+					uint8_t spritePixel = spriteByte & (0x80 >> col);
+
+					int displayIndex = ((yPos+row) * 64) + (xPos + col);
+
+					if (xPos + col >=64 || yPos + row >= 32) {
+						continue;
+					}
+
+					if (spritePixel) {
+						if (displayBuffer[displayIndex] == 1) {
+							registers[0xF] = 1;
+						}
+						displayBuffer[displayIndex] ^= 1;
+					}
+				}
+			}
+			break;
+		}
 
 		default:
 			std::cout<<"Unknown opcode! "<< std::hex<<currentOpcode<<std::endl;
