@@ -17,8 +17,14 @@ int main() {
 	AppState currentState = MENU;
 
 	std::vector< std::pair<std::string, std::string> >  romList = {
-		{"../Keypad Test [Hap, 2006].ch8", "Keypad Test"},
-		{"../Pong one Player.ch8", "Pong"},
+		{"../bin/Keypad Test [Hap, 2006].ch8", "Keypad Test"},
+		{"../bin/Tic-Tac-Toe [David Winter].ch8", "Tic-Tac-Toe"},
+		{"../bin/Space Invaders.ch8", "Space Invaders"},
+		{"../bin/Tetris.ch8", "Tetris"},
+		{"../bin/Pong one Player.ch8", "Pong"},
+		{"../bin/Cave.ch8", "Cave"},
+		{"../bin/PBrix.ch8", "Brix"},
+		{"../bin/Worm V4.ch8", "Worm"},
 	};
 
 	int selectedROMIndex = 0;
@@ -61,10 +67,10 @@ int main() {
 
 			std::string speedText = "CPU Speed:  (Left/Right to adjust)";
 			std::string infoText = std::to_string(cyclesPerFrame) + " cycles per frame";
-			DrawText(speedText.c_str(), 40, 300, 20, BLACK);
-			DrawText(infoText.c_str(), 40, 330, 20, ORANGE);
+			DrawText(speedText.c_str(), 40, 380, 20, BLACK);
+			DrawText(infoText.c_str(), 40, 400, 20, ORANGE);
 
-			DrawText("Pres ENTER to Launch", 40, 420, 20, GREEN);
+			DrawText("Pres ENTER to Launch", 40, 450, 20, GREEN);
 
 			EndDrawing();
 
