@@ -47,16 +47,25 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           update: true
-          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib zip
+          # We removed MSYS2's raylib and added standard 'make'
+          install: mingw-w64-x86_64-gcc make zip
+
+      - name: Compile Raylib from Source
+        shell: msys2 {0}
+        run: |
+          git clone --depth 1 https://github.com/raysan5/raylib.git
+          cd raylib/src
+          make PLATFORM=PLATFORM_DESKTOP
 
       - name: Compile Windows Version
         shell: msys2 {0}
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -static -static-libgcc -static-libstdc++ -lraylib -lgdi32 -lwinmm -lcomdlg32
+        # Notice we added -I and -L to point to the source folder, and added -lopengl32
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -Iraylib/src -Lraylib/src -static -static-libgcc -static-libstdc++ -lraylib -lopengl32 -lgdi32 -lwinmm -lcomdlg32
 
       - name: Create ZIP Archive
         shell: msys2 {0}
         run: |
-          mkdir Chip8-Windows-release
+          mkdir -p Chip8-Windows-release
           mv chip8-windows.exe Chip8-Windows-release/
           cp font.ttf Chip8-Windows-release/
           cp -r bin Chip8-Windows-release/
