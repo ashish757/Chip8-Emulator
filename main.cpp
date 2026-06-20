@@ -16,21 +16,21 @@ int main() {
     InitWindow(64 * scaleF, 32 * scaleF + 10, "Chip-8 Emulator");
     SetTargetFPS(60);
 
-    Font cFont = LoadFontEx("../font.ttf", 32, nullptr, 0);
+    Font cFont = LoadFontEx("./font.ttf", 32, nullptr, 0);
     GuiSetFont(cFont);
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
 
     AppState appState = MENU;
 
     std::vector<std::pair<std::string, std::string>> roms = {
-       {"../bin/Keypad Test [Hap, 2006].ch8", "Keypad Test"},
-       {"../bin/Tic-Tac-Toe [David Winter].ch8", "Tic-Tac-Toe"},
-       {"../bin/Space Invaders.ch8", "Space Invaders"},
-       {"../bin/Tetris.ch8", "Tetris"},
-       {"../bin/Pong one Player.ch8", "Pong"},
-       {"../bin/Cave.ch8", "Cave"},
-       {"../bin/PBrix.ch8", "Brix"},
-       {"../bin/Worm V4.ch8", "Worm"}
+       {"./bin/Keypad Test [Hap, 2006].ch8", "Keypad Test"},
+       {"./bin/Tic-Tac-Toe [David Winter].ch8", "Tic-Tac-Toe"},
+       {"./bin/Space Invaders.ch8", "Space Invaders"},
+       {"./bin/Tetris.ch8", "Tetris"},
+       {"./bin/Pong one Player.ch8", "Pong"},
+       {"./bin/Cave.ch8", "Cave"},
+       {"./bin/PBrix.ch8", "Brix"},
+       {"./bin/Worm V4.ch8", "Worm"}
     };
 
     std::string listStr = "";

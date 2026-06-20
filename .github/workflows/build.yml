@@ -51,7 +51,7 @@ jobs:
 
       - name: Compile Windows Version
         shell: msys2 {0}
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -lraylib -lgdi32 -lwinmm -lcomdlg32
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -static -static-libgcc -static-libstdc++ -lraylib -lgdi32 -lwinmm -lcomdlg32
 
       - name: Create ZIP Archive
         shell: msys2 {0}

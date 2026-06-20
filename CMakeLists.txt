@@ -15,4 +15,7 @@ target_link_libraries(chip8Emulator PRIVATE raylib)
 
 target_include_directories(chip8Emulator PRIVATE /opt/homebrew/include /usr/local/include)
 
+file(COPY font.ttf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY bin DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 
