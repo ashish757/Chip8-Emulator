@@ -25,7 +25,7 @@ jobs:
 
       - name: Create ZIP Archive
         run: |
-          mkdir -p Chip8-Mac
+          mkdir -p Chip8-Mac-release
           mv chip8-mac Chip8-Mac-release/
           cp font.ttf Chip8-Mac-release/
           cp -r bin Chip8-Mac-release/
@@ -56,7 +56,7 @@ jobs:
       - name: Create ZIP Archive
         shell: msys2 {0}
         run: |
-          mkdir Chip8-Windows
+          mkdir Chip8-Windows-release
           mv chip8-windows.exe Chip8-Windows-release/
           cp font.ttf Chip8-Windows-release/
           cp -r bin Chip8-Windows-release/
@@ -89,7 +89,7 @@ jobs:
 
       - name: Create ZIP Archive
         run: |
-          mkdir -p Chip8-Linux
+          mkdir -p Chip8-Linux-release
           mv chip8-linux Chip8-Linux-release/
           cp font.ttf Chip8-Linux-release/
           cp -r bin Chip8-Linux-release/
