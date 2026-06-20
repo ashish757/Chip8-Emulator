@@ -23,7 +23,7 @@ jobs:
 
       - name: Create ZIP Archive
         run: |
-          mkdir Chip8-Mac
+          mkdir -p Chip8-Mac
           mv chip8-mac Chip8-Mac/
           cp font.ttf Chip8-Mac/
           cp -r bin Chip8-Mac/
@@ -52,7 +52,7 @@ jobs:
         run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -lraylib -lgdi32 -lwinmm -lcomdlg32
 
       - name: Create ZIP Archive
-        shell: bash
+        shell: msys2 {0}
         run: |
           mkdir Chip8-Windows
           mv chip8-windows.exe Chip8-Windows/
@@ -87,7 +87,7 @@ jobs:
 
       - name: Create ZIP Archive
         run: |
-          mkdir Chip8-Linux
+          mkdir -p Chip8-Linux
           mv chip8-linux Chip8-Linux/
           cp font.ttf Chip8-Linux/
           cp -r bin Chip8-Linux/
