@@ -1,11 +1,14 @@
-name: Build CHIP-8 Emulator
+name: Build & Release CHIP-8 Emulator
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
-  # MAC BUILD
   build-mac:
     runs-on: macos-latest
     steps:
@@ -18,44 +21,59 @@ jobs:
       - name: Compile Mac Version
         run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
 
-      - name: Upload Finished App
+      - name: Create ZIP Archive
+        run: |
+          mkdir Chip8-Mac
+          mv chip8-mac Chip8-Mac/
+          cp font.ttf Chip8-Mac/
+          cp -r bin Chip8-Mac/
+          zip -r Chip8-Mac.zip Chip8-Mac/
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Mac-Emulator
-          path: chip8-mac
+          name: mac-zip
+          path: Chip8-Mac.zip
 
-  # WINDOWS BUILD
   build-windows:
     runs-on: windows-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Setup Windows C++ Environment (MSYS2)
+      - name: Setup MSYS2
         uses: msys2/setup-msys2@v2
         with:
           update: true
-          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib zip
 
       - name: Compile Windows Version
         shell: msys2 {0}
         run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -lraylib -lgdi32 -lwinmm -lcomdlg32
 
-      - name: Upload Finished .exe
+      - name: Create ZIP Archive
+        shell: bash
+        run: |
+          mkdir Chip8-Windows
+          mv chip8-windows.exe Chip8-Windows/
+          cp font.ttf Chip8-Windows/
+          cp -r bin Chip8-Windows/
+          zip -r Chip8-Windows.zip Chip8-Windows/
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Windows-Emulator
-          path: chip8-windows.exe
+          name: windows-zip
+          path: Chip8-Windows.zip
 
-  # LINUX BUILD
   build-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Install System Graphics & Audio Headers
-        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+      - name: Install System Headers
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev zip
 
       - name: Compile and Install Raylib from Source
         run: |
@@ -67,8 +85,45 @@ jobs:
       - name: Compile Linux Version
         run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
-      - name: Upload Finished App
+      - name: Create ZIP Archive
+        run: |
+          mkdir Chip8-Linux
+          mv chip8-linux Chip8-Linux/
+          cp font.ttf Chip8-Linux/
+          cp -r bin Chip8-Linux/
+          zip -r Chip8-Linux.zip Chip8-Linux/
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Linux-Emulator
-          path: chip8-linux
+          name: linux-zip
+          path: Chip8-Linux.zip
+
+  publish-release:
+    name: Publish to GitHub Releases
+    needs: [build-mac, build-windows, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Mac ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-zip
+          path: release-files/
+
+      - name: Download Windows ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-zip
+          path: release-files/
+
+      - name: Download Linux ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-zip
+          path: release-files/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-files/*
+          generate_release_notes: true
