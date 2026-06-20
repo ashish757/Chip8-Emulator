@@ -48,7 +48,7 @@ jobs:
         with:
           update: true
           # We removed MSYS2's raylib and added standard 'make'
-          install: mingw-w64-x86_64-gcc make zip
+          install: mingw-w64-x86_64-gcc make zip git
 
       - name: Compile Raylib from Source
         shell: msys2 {0}
