@@ -150,24 +150,3 @@ int main() {
 }
 
 
-
-
-
-/*
-
-
-## This time my goal was to convert this basic chip8 emulator in to something any user can use
-coming from web development background, creating ui in C++ (raylib) was completely new.
-
-- no way to creat ui elements, cant just attach event listeners to button like we do in javascriot
-
-## What happens is -
-- you create a rectangle, put some text in it, this is your button
-- there is a constant loop running, which erases and redraws everything on the screen 60 times per second, just like games.
-- now to detect hover, or click, we need to constantly tract the mouse position 60 times a second, to check if it overlaps the coordinates of a particular button
-
-## But
-- i found an interesting piece of code `raygui`, written by the original creator of the raylib.
-- it basically removes the manual need of tracking the cursor position and checking them with the coordinates of the ui elements
-
- */
