@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+
 
 permissions:
   contents: write
@@ -24,10 +26,10 @@ jobs:
       - name: Create ZIP Archive
         run: |
           mkdir -p Chip8-Mac
-          mv chip8-mac Chip8-Mac/
-          cp font.ttf Chip8-Mac/
-          cp -r bin Chip8-Mac/
-          zip -r Chip8-Mac.zip Chip8-Mac/
+          mv chip8-mac Chip8-Mac-release/
+          cp font.ttf Chip8-Mac-release/
+          cp -r bin Chip8-Mac-release/
+          zip -r Chip8-Mac.zip Chip8-Mac-release/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -55,10 +57,10 @@ jobs:
         shell: msys2 {0}
         run: |
           mkdir Chip8-Windows
-          mv chip8-windows.exe Chip8-Windows/
-          cp font.ttf Chip8-Windows/
-          cp -r bin Chip8-Windows/
-          zip -r Chip8-Windows.zip Chip8-Windows/
+          mv chip8-windows.exe Chip8-Windows-release/
+          cp font.ttf Chip8-Windows-release/
+          cp -r bin Chip8-Windows-release/
+          zip -r Chip8-Windows.zip Chip8-Windows-release/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -88,10 +90,10 @@ jobs:
       - name: Create ZIP Archive
         run: |
           mkdir -p Chip8-Linux
-          mv chip8-linux Chip8-Linux/
-          cp font.ttf Chip8-Linux/
-          cp -r bin Chip8-Linux/
-          zip -r Chip8-Linux.zip Chip8-Linux/
+          mv chip8-linux Chip8-Linux-release/
+          cp font.ttf Chip8-Linux-release/
+          cp -r bin Chip8-Linux-release/
+          zip -r Chip8-Linux.zip Chip8-Linux-release/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
