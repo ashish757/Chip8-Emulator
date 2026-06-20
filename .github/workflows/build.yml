@@ -54,11 +54,18 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Install Raylib
-        run: sudo apt-get update && sudo apt-get install -y libraylib-dev
+      - name: Install System Graphics & Audio Headers
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+
+      - name: Compile and Install Raylib from Source
+        run: |
+          git clone --depth 1 https://github.com/raysan5/raylib.git
+          cd raylib/src
+          make PLATFORM=PLATFORM_DESKTOP
+          sudo make install
 
       - name: Compile Linux Version
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-linux -lraylib -lm
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-linux -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
       - name: Upload Finished App
         uses: actions/upload-artifact@v4
