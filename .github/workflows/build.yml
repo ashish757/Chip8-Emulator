@@ -16,7 +16,7 @@ jobs:
         run: brew install raylib
 
       - name: Compile Mac Version
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -lraylib
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
 
       - name: Upload Finished App
         uses: actions/upload-artifact@v4
