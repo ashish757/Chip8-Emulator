@@ -16,7 +16,7 @@ jobs:
         run: brew install raylib
 
       - name: Compile Mac Version
-        run: g++ -std=c++17 main.cpp chip8.cpp -o chip8-mac -lraylib
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -lraylib
 
       - name: Upload Finished App
         uses: actions/upload-artifact@v4
@@ -39,8 +39,7 @@ jobs:
 
       - name: Compile Windows Version
         shell: msys2 {0}
-        # Notice Windows needs a few extra graphics libraries linked!
-        run: g++ -std=c++17 main.cpp chip8.cpp -o chip8-windows.exe -lraylib -lgdi32 -lwinmm
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -lraylib -lgdi32 -lwinmm -lcomdlg32
 
       - name: Upload Finished .exe
         uses: actions/upload-artifact@v4
@@ -59,7 +58,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libraylib-dev
 
       - name: Compile Linux Version
-        run: g++ -std=c++17 main.cpp chip8.cpp -o chip8-linux -lraylib -lm
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-linux -lraylib -lm
 
       - name: Upload Finished App
         uses: actions/upload-artifact@v4

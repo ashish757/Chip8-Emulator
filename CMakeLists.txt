@@ -8,7 +8,8 @@ find_package(raylib REQUIRED)
 
 add_executable(chip8Emulator main.cpp
         chip8.cpp
-        chip8.h)
+        chip8.h
+        platform.cpp)
 
 target_link_libraries(chip8Emulator PRIVATE raylib)
 

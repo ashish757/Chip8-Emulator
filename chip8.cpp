@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include  <cstdlib>
+#include  <vector>
 
 // Chip 8 fontset
 const uint8_t fontset[80] = {
