@@ -65,6 +65,10 @@ The original CHIP-8 used a 16-key hex keypad. This is mapped to your modern keyb
   </tbody>
 </table>
 
+### CPU cycle speed
+- you can contorl the number of instruction to be executed per second, by default its set to 10
+- the screen runs at 60Hz, then the clock speed will be 60 * 10 = 600.
+
 
 ## 🛠️ Building from Source
 
