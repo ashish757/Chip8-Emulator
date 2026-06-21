@@ -8,6 +8,29 @@
 
 std::string getRomPath();
 
+// ------------------- AI generated audio code ---
+const int sampleRate = 44100;
+const int beepFrequency = 440;
+float audioPhase = 0.0f;
+
+
+void AudioInputCallback(void *buffer, unsigned int frames) {
+    short *d = (short *)buffer;
+    float phaseInc = (float)beepFrequency / (float)sampleRate;
+
+    for (unsigned int i = 0; i < frames; i++) {
+        audioPhase += phaseInc;
+        if (audioPhase > 1.0f) audioPhase -= 1.0f;
+
+        if (audioPhase < 0.5f) {
+            d[i] = 8000;
+        } else {
+            d[i] = -8000;
+        }
+    }
+}
+// -------------------------------------
+
 enum AppState {MENU, RUNNING};
 
 int main() {
@@ -15,6 +38,19 @@ int main() {
     int scaleF = 15;
     InitWindow(64 * scaleF, 32 * scaleF + 10, "Chip-8 Emulator");
     SetTargetFPS(60);
+
+    InitAudioDevice();
+    SetAudioStreamBufferSizeDefault(4096);
+    AudioStream beepStream = LoadAudioStream(sampleRate,16,1);
+
+    SetAudioStreamCallback(beepStream, AudioInputCallback);
+
+    PlayAudioStream(beepStream);
+    PauseAudioStream(beepStream);
+
+    bool showDebug = false;
+
+
 
     const char* appDir = GetApplicationDirectory();
     std::string fontPath = std::string(appDir) + "font.ttf";
@@ -128,7 +164,16 @@ int main() {
             }
 
             if (cpu.delayTimer > 0) cpu.delayTimer--;
-            if (cpu.soundTimer > 0) cpu.soundTimer--;
+            if (cpu.soundTimer > 0) {
+                if (!IsAudioStreamPlaying(beepStream)) {
+                    ResumeAudioStream(beepStream);
+                }
+                cpu.soundTimer--;
+            } else {
+                if (IsAudioStreamPlaying(beepStream)) {
+                    PauseAudioStream(beepStream);
+                }
+            }
 
             BeginDrawing();
             ClearBackground(BLACK);
@@ -148,7 +193,8 @@ int main() {
             EndDrawing();
         }
     }
-
+    UnloadAudioStream(beepStream);
+    CloseAudioDevice();
     UnloadFont(cFont);
     CloseWindow();
     return 0;
