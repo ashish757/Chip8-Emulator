@@ -25,7 +25,7 @@ macOS actively blocks applications from unverified developers. To bypass this wi
 3. Scroll down and click `Open Anyway` next to the application block notification.
 
 ### Loading ROMs
-*(Add a brief sentence here explaining how to load a game—e.g., "Use the File > Open menu in the GUI to load a `.ch8` ROM file.")*
+You can load any ROM, simply click on the IMPORT ROM button and select a valid .ch8 file, then click on the launch button to play.
 
 ## 🎮 Controls
 The original CHIP-8 used a 16-key hex keypad. This is mapped to your modern keyboard as follows:
