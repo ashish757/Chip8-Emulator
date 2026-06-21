@@ -19,3 +19,19 @@ file(COPY font.ttf DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY bin DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 
+# Only do this for Apple builds
+if(APPLE)
+    # Copy the font file into the MacOS folder next to the executable
+    add_custom_command(TARGET Chip8-Emulator POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_SOURCE_DIR}/font.ttf"
+            "$<TARGET_FILE_DIR:Chip8-Emulator>/font.ttf"
+    )
+
+    # If you have a bin/ folder full of ROMs, copy that too
+    add_custom_command(TARGET Chip8-Emulator POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+            "$<TARGET_FILE_DIR:Chip8-Emulator>/bin"
+    )
+endif()

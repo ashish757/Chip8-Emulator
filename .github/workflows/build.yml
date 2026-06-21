@@ -20,16 +20,23 @@ jobs:
       - name: Install Raylib
         run: brew install raylib
 
-      - name: Compile Mac Version
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
+      - name: Compile and Build .app Bundle
+        run: |
+          # 1. Create the official macOS application folder structure
+          mkdir -p Chip8-Emulator.app/Contents/MacOS
+          mkdir -p Chip8-Emulator.app/Contents/Resources
+          
+          # 2. Compile the binary directly into the MacOS folder
+          g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o Chip8-Emulator.app/Contents/MacOS/Chip8-Emulator -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
+          
+          # 3. Copy the font and ROMs into the same folder as the executable
+          cp font.ttf Chip8-Emulator.app/Contents/MacOS/
+          cp -r bin Chip8-Emulator.app/Contents/MacOS/
 
       - name: Create ZIP Archive
         run: |
-          mkdir -p Chip8-Mac-release
-          mv chip8-mac Chip8-Mac-release/
-          cp font.ttf Chip8-Mac-release/
-          cp -r bin Chip8-Mac-release/
-          zip -r Chip8-Mac.zip Chip8-Mac-release/
+          # 4. Zip the entire .app folder recursively
+          zip -r Chip8-Mac.zip Chip8-Emulator.app
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -59,8 +66,8 @@ jobs:
 
       - name: Compile Windows Version
         shell: msys2 {0}
-        # Notice we added -I and -L to point to the source folder, and added -lopengl32
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -Iraylib/src -Lraylib/src -static -static-libgcc -static-libstdc++ -lraylib -lopengl32 -lgdi32 -lwinmm -lcomdlg32
+        # Added -mwindows to hide the background terminal!
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -mwindows -Iraylib/src -Lraylib/src -static -static-libgcc -static-libstdc++ -lraylib -lopengl32 -lgdi32 -lwinmm -lcomdlg32
 
       - name: Create ZIP Archive
         shell: msys2 {0}
