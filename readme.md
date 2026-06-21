@@ -1,8 +1,8 @@
 # CHIP-8 Emulator
 A fully functional CHIP-8 emulator written in C++.
 ![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![img2.png](img2.png)
+![img3.png](img3.png)
 
 ### Want to dive into the architecture, memory management, and opcode implementation? **[Check out the Technical Details](TechnicalDetails.md)**.
 
