@@ -20,11 +20,11 @@ Download the latest release for your OS from the [Releases](https://github.com/a
 2. Run the executable.
    *(Note: If you are missing any required libraries, ensure you have the MSVC redistributables installed).*
 
-### macOS
-macOS actively blocks applications from unverified developers. To bypass this without paying the Apple Developer fee, follow these steps:
-1. Extract the downloaded zip and open the executable file.
-2. It will likely be blocked. Open `System Settings` -> `Privacy & Security`
-3. Scroll down and click `Open Anyway` next to the application block notification.
+### macOS: "App is damaged" Error
+Because this app is an open-source project and not signed with a paid Apple Developer account, macOS will incorrectly flag it as "damaged" when you download it. It is perfectly safe! To allow it to run, open your Terminal and execute:
+
+`xattr -cr /path/to/Chip8-Emulator.app`
+*(tip: Type `xattr -cr ` and just drag the app into the terminal to auto-fill the path).*
 
 ### Loading ROMs
 You can load any ROM, simply click on the IMPORT ROM button and select a valid .ch8 file, then click on the launch button to play.
