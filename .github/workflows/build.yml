@@ -6,7 +6,6 @@ on:
       - "v*"
   workflow_dispatch:
 
-
 permissions:
   contents: write
 
@@ -20,23 +19,16 @@ jobs:
       - name: Install Raylib
         run: brew install raylib
 
-      - name: Compile and Build .app Bundle
-        run: |
-          # 1. Create the official macOS application folder structure
-          mkdir -p Chip8-Emulator.app/Contents/MacOS
-          mkdir -p Chip8-Emulator.app/Contents/Resources
-          
-          # 2. Compile the binary directly into the MacOS folder
-          g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o Chip8-Emulator.app/Contents/MacOS/Chip8-Emulator -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
-          
-          # 3. Copy the font and ROMs into the same folder as the executable
-          cp font.ttf Chip8-Emulator.app/Contents/MacOS/
-          cp -r bin Chip8-Emulator.app/Contents/MacOS/
+      - name: Compile Mac Version
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-mac -I$(brew --prefix)/include -L$(brew --prefix)/lib -lraylib
 
       - name: Create ZIP Archive
         run: |
-          # 4. Zip the entire .app folder recursively
-          zip -r Chip8-Mac.zip Chip8-Emulator.app
+          mkdir -p Chip8-Mac-release
+          mv chip8-mac Chip8-Mac-release/
+          cp font.ttf Chip8-Mac-release/
+          cp -r bin Chip8-Mac-release/
+          zip -r Chip8-Mac.zip Chip8-Mac-release/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -54,7 +46,6 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           update: true
-          # We removed MSYS2's raylib and added standard 'make'
           install: mingw-w64-x86_64-gcc make zip git
 
       - name: Compile Raylib from Source
@@ -66,8 +57,7 @@ jobs:
 
       - name: Compile Windows Version
         shell: msys2 {0}
-        # Added -mwindows to hide the background terminal!
-        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -mwindows -Iraylib/src -Lraylib/src -static -static-libgcc -static-libstdc++ -lraylib -lopengl32 -lgdi32 -lwinmm -lcomdlg32
+        run: g++ -std=c++17 main.cpp chip8.cpp platform.cpp -o chip8-windows.exe -Iraylib/src -Lraylib/src -static -static-libgcc -static-libstdc++ -lraylib -lopengl32 -lgdi32 -lwinmm -lcomdlg32
 
       - name: Create ZIP Archive
         shell: msys2 {0}
