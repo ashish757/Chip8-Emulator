@@ -34,6 +34,11 @@ Because CHIP-8 is extremely lightweight, the system only requires 4096 bytes (4K
 +---------------+= 0x000 (0) Start of Chip-8 RAM
 ```
 
+# Register
+- A register is like a storage place very near to the CPU, in chip 8 there are 16 such registers, 8 bit each.
+- CPU can only perform operations on the data which is in the register (not RAM).
+- in chip8 registers can store only max value of 255 (11111111).
+- To overcome this limit, 16th register is used a flag, to indicate this overflow
 
 ## 3. Instruction Decoding & Bitwise Magic
 CHIP-8 has exactly 35 standard operational codes (opcodes). Because each instruction is exactly two bytes long, the emulator parses the raw machine code and chops it into 2-byte groups.
