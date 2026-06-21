@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(raylib REQUIRED)
 
 
-add_executable(chip8Emulator main.cpp
+add_executable(chip8Emulator WIN32 MACOSX_BUNDLE main.cpp
         chip8.cpp
         chip8.h
         platform.cpp)
