@@ -6,13 +6,12 @@ A fully functional CHIP-8 emulator written in C++.
 
 ## ✨ Features
 * Accurate opcode implementation based on cowgod's reference.
-* Cross-platform support (Windows & macOS).
-* Immediate Mode GUI for debugging and state inspection.
-* Automated CI/CD pipeline for release builds.
+* Cross-platform support (Windows, macOS, (haven't tested the build on linux)).
+* Automated CI pipeline for release builds.
 
 ## 🚀 Running the Emulator
 
-Download the latest release for your OS from the [Releases](#) tab.
+Download the latest release for your OS from the [Releases](https://github.com/ashish757/Chip8-Emulator/releases) tab.
 
 ### Windows
 1. Download and extract the `.zip` file.
@@ -22,8 +21,8 @@ Download the latest release for your OS from the [Releases](#) tab.
 ### macOS
 macOS actively blocks applications from unverified developers. To bypass this without paying the Apple Developer fee, follow these steps:
 1. Extract the downloaded zip and open the executable file.
-2. It will likely be blocked. Open **System Settings** -> **Privacy & Security**.
-3. Scroll down and click **Open Anyway** next to the application block notification.
+2. It will likely be blocked. Open `System Settings` -> `Privacy & Security`
+3. Scroll down and click `Open Anyway` next to the application block notification.
 
 ### Loading ROMs
 *(Add a brief sentence here explaining how to load a game—e.g., "Use the File > Open menu in the GUI to load a `.ch8` ROM file.")*
@@ -87,10 +86,11 @@ Getting the code to compile was only half the battle. Automating the distributio
 
 # Credits
 1. cowgod's  Chip 8 technical reference http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
-2. used Gemini to simplify some of the op codes and memory management, which were not clear in cowgod's blog
+2. The preloaded Chip8 ROMs are from kripod : https://github.com/kripod/chip8-roms
+3. used Gemini to simplify some of the op codes and memory management, which were not clear in cowgod's blog
 
 ## AI
 - Used JetBrain Clion's Auto completion.
-- The UI(not the graphics engine) was created with the helo of copilot and gemini, I learnt about Immediate Mode GUI, but took AI help, as my main goal was chip8, not UX.
+- The UI(not the graphics engine) was created with the help of copilot and gemini, I learnt about Immediate Mode GUI, but took AI help, as my main goal was chip8, not UX.
 
 
