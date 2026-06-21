@@ -15,16 +15,10 @@ A fully functional CHIP-8 emulator written in C++.
 
 Download the latest release for your OS from the [Releases](https://github.com/ashish757/Chip8-Emulator/releases) tab.
 
-### Windows
-1. Download and extract the `.zip` file.
-2. Run the executable.
-   *(Note: If you are missing any required libraries, ensure you have the MSVC redistributables installed).*
-
-### macOS: "App is damaged" Error
-Because this app is an open-source project and not signed with a paid Apple Developer account, macOS will incorrectly flag it as "damaged" when you download it. It is perfectly safe! To allow it to run, open your Terminal and execute:
-
-`xattr -cr /path/to/Chip8-Emulator.app`
-*(tip: Type `xattr -cr ` and just drag the app into the terminal to auto-fill the path).*
+### macOS
+Because this app is an open-source project and not signed with a paid Apple Developer ($99/yr) account, macOS will incorrectly flag it.
+1. open the executable file inside the zip.
+2. Open System Settings go to `privacy and security` scroll down there you will se option to `open anyway`, sorry I don't really have $99
 
 ### Loading ROMs
 You can load any ROM, simply click on the IMPORT ROM button and select a valid .ch8 file, then click on the launch button to play.
@@ -66,7 +60,7 @@ The original CHIP-8 used a 16-key hex keypad. This is mapped to your modern keyb
 </table>
 
 ### CPU cycle speed
-- you can contorl the number of instruction to be executed per second, by default its set to 10
+- you can control the number of instruction to be executed per second, by default its set to 10
 - the screen runs at 60Hz, then the clock speed will be 60 * 10 = 600.
 
 
