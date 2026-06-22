@@ -1,14 +1,38 @@
 # Technical Architecture: CHIP-8 Emulator in C++
 
-## 1. High-Level Concept
-A CHIP-8 emulator acts as an intermediary layer that translates instructions meant for an ancient 1970s 8-bit architecture into operations modern computers can execute. Instead of just being an interpreted language, CHIP-8 mimics an entire CPU architecture, complete with its own memory constraints and registers.
+# What is chip 8?
+> chip 8 is basically a interpreted programing language of ancient times (70s). It kind of mimics a small computer (8 bit), limiting its max memory to 4KB. But the special thing is, its not just a language, it mimics a CPU architecture, making it like a different computer system which doesnt exists phycally, but uses other physical computer to run its own acrhitecture.
 
-If we have a software (`S`) meant for the CHIP-8 system (`C1`), it will naturally fail on a modern system (`C2`). The emulator intercepts the `C1` machine code, translates the instructions, and allows `C2` to process them seamlessly.
+# What is Emulator?
+> Well think of emulator as a extra added layer between the software and low level computer systems. which does some magic to run a software which is not ment to run on that system.
 
-## 2. Memory & The Execution Cycle
-Because CHIP-8 is extremely lightweight, the system only requires 4096 bytes (4KB) of RAM.
-* **Memory Structure:** The RAM is simulated using a modern C++ data structure (an array of size 4096). The first 200 spaces are reserved for internal CHIP-8 system use, leaving the rest open for loading the `.ch8` binary files.
-* **The Execution Loop:** The core of the emulator is a continuous `while` loop that drives the CPU clock. Inside the `executeCycle` function, a `programCounter` variable tracks the current execution position in memory and calculates the next instruction to fetch.
+> Windows Application –> macOS (Won’t Run)
+
+> Windows Application –> Emulator –> macOS (Will Run)
+
+## Execution Flow
+- Lets say we have a software S, designed to run on System of type C1, but now we want to run the same software on a different system lets say C2,
+- S –> C1 RUNs properly
+- S –> C2 Fails as C2 cant understand the instruction that software S is trying to give to C2
+
+## Emulator in the picture
+- Software S (instruction codes for C1 ) –> Emulator (Translates Instruction code for C1 to C2) –> now C2 can run (Translated instructions).
+
+
+# Now Chip 8 and Emulator
+> Lets say you have a program which was designed in and for Chip8, but now you dont have a chip8 system, how do you run this program?
+
+> We basically use an emulator to trick the software to thing that its running in the old Chip8 system but its acctually running on moder computers.
+
+> Howwwwww? well Chip8 has 35 standard instructions and only 4096 bytes of memory, so its faily easy to map each and every of its instruction and instead do it in the modern langauges (like i have used C++).
+
+> We store the data in modern C++ Data Structures, but we trick the target software to thing that it has dorect acces to the RAM of the computer.
+
+# How emulator achieves this?
+### Memory
+- we store the data in modern Data structures and tell the software that its data is stored directly in the ram.
+- create and array of size 4096 (4Kb), we leave starting 200, and start from 201rth index, the  200 spaces are used by the Chip8 itself, rest is left to be used by the program.
+
 ```
 +---------------+= 0xFFF (4095) End of Chip-8 RAM
 |               |
@@ -34,34 +58,62 @@ Because CHIP-8 is extremely lightweight, the system only requires 4096 bytes (4K
 +---------------+= 0x000 (0) Start of Chip-8 RAM
 ```
 
-# Register
-- A register is like a storage place very near to the CPU, in chip 8 there are 16 such registers, 8 bit each, named V0 V1 ... V15.
-- CPU can only perform operations on the data which is in the register (not RAM).
-- in chip8 registers can store only max value of 255 (11111111).
-- To overcome this limit, 16th register (V15) is used as a flag, to indicate this overflow or to show collision depending upon context.
 
-## 3. Instruction Decoding & Bitwise Magic
-CHIP-8 has exactly 35 standard operational codes (opcodes). Because each instruction is exactly two bytes long, the emulator parses the raw machine code and chops it into 2-byte groups.
+### Registers
+- There are 16 registers each of size 8 bit, named as V0 V1 ... V15
+- V15 is reserved for flag, such as integer overflow and collision depending upon context.
 
-To extract the specific commands from these hexadecimals (where every character is a 4-bit nibble), we rely heavily on bitwise operations:
-* **Bitwise AND (`&`):** Used as a mask to isolate specific values. For example, applying a bitwise AND with the mask `0xFFFF` on `0xA22A` strips away unwanted bits, keeping only the values aligned with the `F`s.
-* **Bitwise Right Shift (`>>`):** Used to slide characters over and eliminate trailing zeroes. Because a hex character is 4 bits, shifting `0xA000 >> 12` yields `0xA`.
-* **Routing:** Once the defining nibble is extracted, it is fed into a massive `switch` case that maps the ancient CHIP-8 command to its modern C++ equivalent (e.g., executing a standard addition routine).
+### Processing
+- Chip 8 has only 37 different commands, which we will manually define and translate the working in C++ language.
+- For example code 8XYN represents addition, so we will intercept this instruction code and do the job(addition), according to the moder computer and return the ans, tricking software into thinking that it got its answer processes from the CPU.
 
-## 4. Graphics Engine & Collision Detection
-* **Display Constraints:** The display is a simple 64x32 pixel black-and-white grid. Since this is incredibly small on modern monitors, a visual multiplier is used to scale it up. Pixels are strictly binary: `1` for white and `0` for black.
-* **Immediate Mode Rendering:** Unlike the DOM in web development, there are no persistent UI elements. The game loop aggressively erases and redraws the entire screen 60 times per second, which creates the classic "flashing" effect of retro games.
-* **Collision via Bitwise ZOR (`^`):** When drawing sprites, the emulator compares the *current* pixel value with the *new* pixel value using the `^` (XOR) operator. If two white pixels overlap (`1 ^ 1 = 0`), it registers a collision, and the 16th CPU register (`Vf`) is set to `1`.
+### Flow
+> INPUT: Machine code ment for Chip8 -> MEMORY: store in modern data structures -> PROCESS: intercept the instruction codes and then process and return result -> OUTPUT: use a screen to display basic graphics with the calculated results
 
-## 5. User Interface & Hardware Mapping
-* **The Keypad:** The original 16-key hex pad (1-C, 4-D, 7-E, A-F) is mapped 1:1 onto the modern QWERTY left hand (1-4, Q-R, A-F, Z-V).
-* **UI Controls:** To avoid the nightmare of manually tracking mouse coordinates 60 times a second to detect button hovers, the emulator utilizes `raygui` to abstract the heavy UI math.
-* **Native Dialogs:** To load custom `.ch8` files, the emulator hooks into native OS file pickers—utilizing `AppleScript` via macOS and spawning a background `shell` on Windows.
+# Retrival of instructions
+
+## A brief on Hexadecimal
+- 0x is used to represent a Hexadecimal number, each hex char is 4 bits.
+- A nibble(4 bits) gets translated into one hexadecimal number.
+
+## MORE on Memory & processing
+- we receive machine code, we parse it, chop up the all the instruction, into two byte groups,
+- These two bute groups, indicate one instruction.
+- We create a big switch case, where we map these instruction with our memory.
+
+## Retrival of specific parts of instruction  (Bitwise &)
+- Bitwise AND only keeps the values when mask has F in it
+- Lets say 0xA22A is an instruction to get the last four letter we take a bitwise AND with mask 0XFFFF
+
+## Sliding the chars (Bitwise >>)
+- Now that we have the required character/Nibble out of a instruction code, we need to eliminate the extra 0 values.
+- We do this with right shift(>>), we simply do >> 4 (4, as a hex is of 4 bits) for removing a single zero on the right.
+- 0xA000 >> 12 = 0xA
+
+> so the bottom line is, we take a Nibble out of the instruction code, this single char tell us about the kind of operation we need to perform for this instruction code. We look for it in our switch statement, if ww have it then we execute it.
+
+# Graphics
+- we basically have black and white screen, 64px length and 32px height (we use multiplier so the size is not exactly 64x32, as that will be two small)
+- we then have 1s, 0s to represent black and white pixels
+- the engine basically deleted every pixel and re draws it again, this causes a flashing effect as moder screens are faster and also show the transition.
+
+# Collision detection
+- the value of a pixel is set to 1 (white) and 0 (black)
+- We take XOR of the Current value of the pixel and the to be updated value
+- if two pixels are white (1) the xor will be 0, and when this happens we set the Vf to 1, indicating a collision has occured.
+- Vf is the 16th register which is left empty and use only to show collision.
 
 
+# Keypad
+```angular2html
+Original Chip8       ---->      Modern keyboard
+1  2   3   C                    1   2   3   4
+4  5   6   D                    Q   W   E   R
+7  8   9   E                    A   S   D   F
+A  0   B   F                    Z   X   C   V
+```
 
 
-
-### I used AI to improve writing and grammar, you can find below, the original `technical detail` which i wrote
+### I used AI to improve writing and grammar, you can find below, the original `technical detail` which i wrote myself
 
 https://docs.google.com/document/d/1JY9W7jFz--8trjnsDtCjEP6NaZTUCz2OtxtFdhQBUJY/edit?usp=sharing

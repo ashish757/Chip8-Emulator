@@ -1,32 +1,37 @@
 # CHIP-8 Emulator
-A fully functional CHIP-8 emulator written in C++.
+- Emulator are basically software layers to trick other software into thinking that they are being run on another computer, the one that they support natively
+- Here Chip 8 emulator will trick some codes/softwares which were originally created for Chip 8, to think that they are running on the chip 8, but in reality they will be running on modern computers.
+
 ![img.png](img.png)
 ![img2.png](img2.png)
 ![demo.gif](demo.gif)
 
+
 ### Want to dive into the architecture, memory management, and opcode implementation? **[Check out the Technical Details](TechnicalDetails.md)**.
 
-## ✨ Features
+## Features
 * Accurate opcode implementation based on cowgod's reference.
-* Cross-platform support (Windows, macOS, (haven't tested the build on linux)).
+* Cross-platform support (Windows, macOS, (haven't tested the build on linux yet)).
 * Automated CI pipeline for release builds.
 
-## 🚀 Running the Emulator
+## Running the Emulator
 
 Download the latest release for your OS from the [Releases](https://github.com/ashish757/Chip8-Emulator/releases) tab.
 ### windows
-Windows defender might block the execution, ignore the warning and run the application.
+`Windows defender` will block the execution, ignore the warning and click on `run anyway`.
 
 ### macOS
-Because this app is an open-source project and not signed with a paid Apple Developer ($99/yr) account, macOS will incorrectly flag it.
-1. open the executable file inside the zip.
-2. Open System Settings go to `privacy and security` scroll down there you will se option to `open anyway`, sorry I don't really have $99
+Apple will flag my executable, as unsafe to overcome this apple requires $99 to get verified, follow the below steps to run the application anyway -
+1. Unzip and open the executable file inside.
+2. now open `System Settings` and go to `privacy and security` then scroll down you will se option to `open anyway`, sorry I don't really have $99
 
 ### Loading ROMs
-You can load any ROM, simply click on the IMPORT ROM button and select a valid .ch8 file, then click on the launch button to play.
+You can load any .ch8 ROM file, simply click on the IMPORT ROM button and select a valid .ch8 file, then click on the launch button to play.
 
-## 🎮 Controls
-The original CHIP-8 used a 16-key hex keypad. This is mapped to your modern keyboard as follows:
+## How to control the game?
+The original CHIP-8 used a 16-key hex keypad.
+This is mapped to your modern keyboard, use these keys to give input and control the games
+
 <table>
   <thead>
     <tr>
@@ -61,14 +66,10 @@ The original CHIP-8 used a 16-key hex keypad. This is mapped to your modern keyb
   </tbody>
 </table>
 
-### CPU cycle speed
-- you can control the number of instruction to be executed per second, by default its set to 10
-- the screen runs at 60Hz, then the clock speed will be 60 * 10 = 600.
 
+## Building from Source
 
-## 🛠️ Building from Source
-
-To build this project locally, ensure you have a C++ compiler and cmake on your system.
+To build this project locally, make sure you have a C++ compiler and cmake on your system.
 
 ```bash
 git clone [https://github.com/ashish757/Chip8-Emulator.git](https://github.com/ashish757/Chip8-Emulator.git)
@@ -81,9 +82,9 @@ cmake --build
 
 ## The Final Boss: CI & Distribution
 Getting the code to compile was only half the battle. Automating the distribution pipeline via Continuous Integration took countless iterations to resolve linker and config errors.
-* **Windows "DLL Hell":** Windows constantly threw missing DLL and pathing errors. Because the development environment was macOS, debugging required pinging a non-tech friend with new `.exe` files after every build.
-* **Apple Gatekeeper:** macOS actively blocks applications from unverified developers unless the $99/yr Apple Developer fee is paid. To bypass this without paying Tim Cook, users must manually override security settings, though building a standard `.app` bundle structure helps tame Gatekeeper slightly.
 
+- while implementing ```Continuous Integration``` i did countless iterations solving dumb errors, adjusting platform depended configs and so on...
+- but results are just as fin, now automatic releases are created for every tag.
 
 
 # Credits
