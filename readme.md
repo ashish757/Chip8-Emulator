@@ -14,6 +14,8 @@ A fully functional CHIP-8 emulator written in C++.
 ## 🚀 Running the Emulator
 
 Download the latest release for your OS from the [Releases](https://github.com/ashish757/Chip8-Emulator/releases) tab.
+### windows
+Windows defender might block the execution, ignore the warning and run the application.
 
 ### macOS
 Because this app is an open-source project and not signed with a paid Apple Developer ($99/yr) account, macOS will incorrectly flag it.
